@@ -17,23 +17,25 @@ public class CalcServlet extends HttpServlet {
         Integer a = mapToInteger(req.getParameter("a"));
         Integer b = mapToInteger(req.getParameter("b"));
 
-        CalculationResult result = calculate(req.getPathInfo(), a, b);
+        String operation = Optional.ofNullable(req.getPathInfo())
+                .orElse(req.getParameter("operation"));
+        CalculationResult result = calculate(operation, a, b);
 
         PrintWriter writer = resp.getWriter();
         writer.println("<h1>Wynik " + result.resultRepresentation + "</h1>");
     }
 
-    private CalculationResult calculate(String path, int a, int b) {
-        if (path.endsWith("add")) {
+    private CalculationResult calculate(String operation, int a, int b) {
+        if (operation.endsWith("add")) {
             return new CalculationResult(
                     a + b,
                     a + " + " + b + " = " + (a + b));
-        } else if (path.endsWith("subtract")) {
+        } else if (operation.endsWith("subtract")) {
             return new CalculationResult(
                     a - b,
                     a + " - " + b + " = " + (a - b));
 
-        } else if (path.endsWith("multiply")) {
+        } else if (operation.endsWith("multiply")) {
             return new CalculationResult(
                     a * b,
                     a + " * " + b + " = " + (a * b));
